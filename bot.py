@@ -6,7 +6,7 @@ from utils import opus_loader
 from utils import config as c
 from discord.ext import commands
 
-opus_loader.load_opus_lib()
+#opus_loader.load_opus_lib()
 
 config = c.Config
 
@@ -35,6 +35,7 @@ async def on_ready():
     print(bot.user)
     print(bot.user.id)
     print('----------')
+    print('Opus Loaded: ' + str(discord.opus.is_loaded()))
 
 @bot.event
 async def on_message(message):

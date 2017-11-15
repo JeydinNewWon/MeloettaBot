@@ -36,6 +36,7 @@ async def on_ready():
     print(bot.user)
     print(bot.user.id)
     print('----------')
+    print('Opus Loaded: ' + str(discord.opus.is_loaded()))
 
 @bot.event
 async def on_message(message):

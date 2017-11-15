@@ -6,7 +6,8 @@ from utils import opus_loader
 from utils import config as c
 from discord.ext import commands
 
-opus_loader.load_opus_lib()
+if discord.opus.is_loaded() == False:
+    opus_loader.load_opus_lib()
 
 config = c.Config
 

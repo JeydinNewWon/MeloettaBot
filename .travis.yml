@@ -1,7 +1,9 @@
 language: python
 python:
   - "3.6.1"
-
+before_install:
+  - sudo apt-get install libopus0
+  - sudo apt-get install libopus-dev
 install:
   - pip install -r requirements.txt
 

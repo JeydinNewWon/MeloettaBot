@@ -48,28 +48,6 @@ class Misc(object):
         await self.bot.say("Your percentage is: " + str(final_score) + "\nYour grade is: " + final_grade)
 
     @commands.command(pass_context=True)
-    async def spam(self, ctx):
-        message = ctx.message
-        content = message.content[7:]
-        content = content.split(' ')
-        times_to_spam = content[-1]
-        msg_to_spam = ' '.join(content[0:-1])
-
-        if message.channel.server.get_member(config.owner_id) in message.mentions:
-            await self.bot.say('I shall not spam my master!')
-            return
-        elif not times_to_spam.isdigit():
-            await self.bot.say('I can\'t spam things "{}" times.'.format(times_to_spam))
-        else:
-            x = int(times_to_spam)
-            if x > 100:
-                await self.bot.say('I can\'t spam things more than 100 times.')
-                return
-            else:
-                for i in range(x):
-                    await self.bot.say(msg_to_spam)
-
-    @commands.command(pass_context=True)
     async def translate(self, ctx):
         message = ctx.message
         content = message.content.split(' ')

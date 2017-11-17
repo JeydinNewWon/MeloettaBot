@@ -115,10 +115,6 @@ class Moderation(object):
         members_to_mute = message.mentions
 
         await self._mute_members(message, members_to_mute, mute_from_server=True)
-
-
-
-
-
+        
 def setup(bot):
     bot.add_cog(Moderation(bot))

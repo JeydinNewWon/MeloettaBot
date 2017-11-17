@@ -5,4 +5,6 @@ class Config:
     command_prefix = 'm.'
     success = ':white_check_mark:'
     fail = ':no_entry_sign:'
+    mute_role_id = '381035421691281408'
+    default_server_role_id = '381042659101507585'
     invite = 'https://discordapp.com/oauth2/authorize?client_id=378721481250570240&scope=bot&permissions=2146958591'

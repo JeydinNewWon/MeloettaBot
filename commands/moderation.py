@@ -6,12 +6,14 @@ from utils import config as c
 config = c.Config
 success = config.success
 fail = config.fail
+s_id = config.mute_role_id
+d_id = config.default_server_role_id
 
 class Moderation(object):
     def __init__(self, bot):
         self.bot = bot
 
-    def get_role(_id, message):
+    def get_role(self, _id, message):
         if message is None:
             return
         else:
@@ -23,7 +25,7 @@ class Moderation(object):
         if mute_from_server:
             _muted = []
             _could_not_mute = []
-            snake_role = [self.get_role('353500331361042453', message)]
+            snake_role = [self.get_role(s_id, message)]
 
             for member in member_li:
                 try:
@@ -52,15 +54,62 @@ class Moderation(object):
                     del member_roles[0]
                     await self.bot.remove_roles(member, *member_roles)
                     await self.bot.edit_channel_permissions(message.channel, member, discord.PermissionOverwrite(send_messages=False, connect=False))
-                    _muted.append(member.name)
+                    _muted.append('<@{}>'.format(member.id))
                 except discord.Forbidden:
-                    _could_not_mute.append(member.name)
+                    _could_not_mute.append('<@{}>'.format(member.id))
 
             if len(_muted) > 0:
-                await self.bot.say('{} Successfully muted {} from #{}.'.format(success, ', '.join(_muted), message.channel.name))
+                await self.bot.say('{} Successfully muted {} from <#{}>.'.format(success, ', '.join(_muted), message.channel.id))
 
             if len(_could_not_mute) > 0 and len(_muted) == 0:
                 await self.bot.say('{} Could not mute {} due to insufficient permissions.'.format(fail, ', '.join(_could_not_mute)))
+
+        else:
+            return
+
+    async def _unmute_members(self, message, member_li, unmute_from_server=False):
+        if unmute_from_server:
+            _unmuted = []
+            _could_not_unmute = []
+            DEFAULT_ROLE = [self.get_role(d_id, message)]
+
+            for member in member_li:
+                try:
+                    member_roles = member.roles
+                    del member_roles[0]
+                    await self.bot.remove_roles(member, *member_roles)
+                    await self.bot.add_roles(member, *DEFAULT_ROLE)
+                    _unmuted.append('<@{}>'.format(member.id))
+
+                except discord.Forbidden:
+                    _could_not_unmute.append('<@{}>'.format(member.id))
+
+            if len(_unmuted) > 0:
+                await self.bot.say('{} Successfully unmuted {} from **{}**.'.format(success, ', '.join(_unmuted), message.channel.server.name))
+
+            if len(_could_not_unmute) > 0 and len(_unmuted) == 0:
+                await self.bot.say('{} Could not unmute {} due to insufficient permissions.'.format(fail, ', '.join(_could_not_unmute)))
+
+
+        elif not unmute_from_server:
+            _unmuted = []
+            _could_not_unmute = []
+
+            for member in member_li:
+                try:
+                    member_roles = member.roles
+                    del member_roles[0]
+                    await self.bot.remove_roles(member, *member_roles)
+                    await self.bot.edit_channel_permissions(message.channel, member, discord.PermissionOverWrite(send_messages=None, connect=None))
+                    _unmuted.append('<@{}>'.format(member.id))
+                except discord.Forbidden:
+                    _could_not_unmute.append('<@{}>'.format(member.id))
+
+            if len(_unmuted) > 0:
+                await self.bot.say('{} Successfully unmuted {} from <#{}>.'.format(success, ', '.join(_unmuted), message.channel.id))
+
+            if len(_could_not_unmute) > 0 and len(_unmuted) == 0:
+                await self.bot.say('{} Could not unmute {} due to insufficient permissions.'.format(fail, ', '.join(_could_not_unmute)))
 
         else:
             return
@@ -73,16 +122,15 @@ class Moderation(object):
         for i in members_to_kick:
             try:
                 await self.bot.kick(i)
-                kicked.append(i.name)
+                kicked.append('<@{}>'.format(i.id))
             except discord.Forbidden:
-                could_not_kick.append(i.name)
+                could_not_kick.append('<@{}>'.format(i.id))
 
         if len(kicked) > 0:
             await self.bot.say('{} Successfully kicked {} from **{}**.'.format(success, ', '.join(kicked), ctx.message.channel.server.name))
 
         if len(could_not_kick) > 0 and len(kicked) == 0:
             await self.bot.say('{} Could not kick {} due to insufficient permissions.'.format(fail, ', '.join(could_not_kick)))
-
 
     @commands.command(pass_context=True)
     async def ban(self, ctx):
@@ -92,9 +140,9 @@ class Moderation(object):
         for i in members_to_ban:
             try:
                 await self.bot.ban(i, delete_message_days=0)
-                banned.append(i.name)
+                banned.append('<@{}>'.format(i.id))
             except discord.Forbidden:
-                could_not_ban.append(i.name)
+                could_not_ban.append('<@{}>'.format(i.id))
 
         if len(banned) > 0:
             await self.bot.say('{} Successfully banned {} from **{}**.'.format(success, ', '.join(banned), ctx.message.channel.server.name))
@@ -115,6 +163,20 @@ class Moderation(object):
         members_to_mute = message.mentions
 
         await self._mute_members(message, members_to_mute, mute_from_server=True)
+
+    @commands.command(pass_context=True)
+    async def unmute(self, ctx):
+        message = ctx.message
+        members_to_unmute = message.mentions
+
+        await self._unmute_members(message, members_to_unmute, unmute_from_server=False)
+
+    @commands.command(pass_context=True)
+    async def serverunmute(self, ctx):
+        message = ctx.message
+        members_to_unmute = message.mentions
+
+        await self._unmute_members(message, members_to_unmute, unmute_from_server=True)
         
 def setup(bot):
     bot.add_cog(Moderation(bot))

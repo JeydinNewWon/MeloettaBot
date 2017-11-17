@@ -15,7 +15,7 @@ config = c.Config
 
 extensions = ['commands.miscellaneous', 'commands.moderation']
 
-bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and others.", pm_help=None)
+bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and functions.", pm_help=None)
 bot.remove_command('help')
 aiosession = aiohttp.ClientSession(loop=bot.loop)
 
@@ -24,6 +24,7 @@ aiosession = aiohttp.ClientSession(loop=bot.loop)
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
+
 
 
 async def _restart_bot():
@@ -53,6 +54,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+    '''
     if message.content.startswith('m.spam'):
         content = message.content[7:]
         content = content.split(' ')
@@ -75,7 +77,8 @@ async def on_message(message):
                     asyncio.sleep(1)
                     await bot.send_message(message.channel, msg_to_spam)
                     x -= 1
-    elif message.content == 'rwby':
+    '''
+    if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
 
     await bot.process_commands(message)

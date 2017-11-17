@@ -8,8 +8,8 @@ Invite link: `https://discordapp.com/oauth2/authorize?client_id=3787214812505702
 
 
 ## Requirements
-* Python 3
-* discord.py
-* PyDictionary
-* googletrans
-* youtube-dl
+* `Python 3`
+* `discord.py`
+* `PyDictionary`
+* `googletrans`
+* `youtube-dl`

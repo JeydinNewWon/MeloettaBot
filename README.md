@@ -12,4 +12,4 @@ Invite link: `https://discordapp.com/oauth2/authorize?client_id=3787214812505702
 * discord.py
 * PyDictionary
 * googletrans
-* aiohttp
+* youtube-dl

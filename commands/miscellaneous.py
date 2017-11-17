@@ -67,5 +67,6 @@ class Misc(object):
             await self.bot.say('Please enter a valid language request.')
 
 
+
 def setup(bot):
     bot.add_cog(Misc(bot))

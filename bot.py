@@ -13,7 +13,7 @@ opus_load_status = opus_loader.load_opus_lib()
 
 config = c.Config
 
-extensions = ['commands.misc']
+extensions = ['commands.miscellaneous', 'commands.moderation']
 
 bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and others.", pm_help=None)
 bot.remove_command('help')
@@ -25,6 +25,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
 
+
 async def _restart_bot():
     try:
         aiosession.close()
@@ -35,17 +36,20 @@ async def _restart_bot():
 
 @bot.event
 async def on_ready():
+    for extension in extensions:
+        #bot.load_extension(extension)
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            print("Failed to load extension {}\n{}: {}".format(extension, type(e).__name__, e))
+    print('----------')
     print("Logged in as:")
     print(bot.user)
     print(bot.user.id)
     print('----------')
     print(opus_load_status)
+    print('----------')
 
-    for extension in extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            print("Failed to load extension {}\n{}: {}".format(extension, type(e).__name__, e))
 
 @bot.event
 async def on_message(message):
@@ -71,14 +75,10 @@ async def on_message(message):
                     asyncio.sleep(1)
                     await bot.send_message(message.channel, msg_to_spam)
                     x -= 1
+    elif message.content == 'rwby':
+        await bot.send_message(message.channel, 'is the best anime!')
 
     await bot.process_commands(message)
-
-'''
-@bot.command(pass_context=True)
-async def test(ctx):
-    await bot.say('Sexism.')
-'''
 
 @bot.command(pass_context=True)
 async def restart(ctx):

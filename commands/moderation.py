@@ -8,6 +8,7 @@ success = config.success
 fail = config.fail
 s_id = config.mute_role_id
 d_id = config.default_server_role_id
+mod_ids = config.mod_role_ids
 
 class Moderation(object):
     def __init__(self, bot):
@@ -21,7 +22,15 @@ class Moderation(object):
                 if i.id == _id:
                     return i
 
+    def is_mod(self, member_roles):
+        for x in member_roles:
+            if x.id in mod_ids:
+                return True
+
+        return False
+
     async def _mute_members(self, message, member_li, mute_from_server=False):
+
         if mute_from_server:
             _muted = []
             _could_not_mute = []
@@ -154,29 +163,49 @@ class Moderation(object):
     async def mute(self, ctx):
         message = ctx.message
         members_to_mute = message.mentions
+        author_roles = message.author.roles
 
-        await self._mute_members(message, members_to_mute, mute_from_server=False)
+        if not self.is_mod(author_roles):
+            await self.bot.say('{} Sorry, you can\'t use that command.'.format(fail))
+            return
+        else:
+            await self._mute_members(message, members_to_mute, mute_from_server=False)
 
     @commands.command(pass_context=True)
     async def servermute(self, ctx):
         message = ctx.message
         members_to_mute = message.mentions
+        author_roles = message.author.roles
 
-        await self._mute_members(message, members_to_mute, mute_from_server=True)
+        if not self.is_mod(author_roles):
+            await self.bot.say('{} Sorry, you can\'t use that command.'.format(fail))
+            return
+        else:
+            await self._mute_members(message, members_to_mute, mute_from_server=True)
 
     @commands.command(pass_context=True)
     async def unmute(self, ctx):
         message = ctx.message
         members_to_unmute = message.mentions
+        author_roles = message.author.roles
 
-        await self._unmute_members(message, members_to_unmute, unmute_from_server=False)
+        if not self.is_mod(author_roles):
+            await self.bot.say('{} Sorry, you can\'t use that command.'.format(fail))
+            return
+        else:
+            await self._unmute_members(message, members_to_unmute, unmute_from_server=False)
 
     @commands.command(pass_context=True)
     async def serverunmute(self, ctx):
         message = ctx.message
         members_to_unmute = message.mentions
+        author_roles = message.author.roles
 
-        await self._unmute_members(message, members_to_unmute, unmute_from_server=True)
+        if not self.is_mod(author_roles):
+            await self.bot.say('{} Sorry, you can\'t use that command.'.format(fail))
+            return
+        else:
+            await self._unmute_members(message, members_to_unmute, unmute_from_server=True)
         
 def setup(bot):
     bot.add_cog(Moderation(bot))

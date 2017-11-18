@@ -5,5 +5,4 @@ aiohttp
 websockets
 chardet
 youtube_dl==2017.11.6
-subprocess
 asyncio

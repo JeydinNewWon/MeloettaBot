@@ -33,6 +33,13 @@ async def _restart_bot():
     await bot.logout()
     subprocess.call(["python3", "bot.py"])
 
+async def _shutdown_bot():
+    try:
+        aiosession.close()
+    except:
+        pass
+    await bot.logout()
+
 @bot.event
 async def on_ready():
     for extension in extensions:
@@ -63,7 +70,18 @@ async def restart(ctx):
     if ctx.message.author.id != config.owner_id:
         bot.say(":no_entry_sign: You are not permitted to use that command.")
         return
-    print("{} is restarting the bot!".format(ctx.message.author))
-    await _restart_bot()
+    else:
+        print("{} is restarting the bot!".format(ctx.message.author))
+        await _restart_bot()
+
+@bot.command(pass_context=True)
+async def shutdown(ctx):
+    if ctx.message.author.id != config.owner_id:
+        bot.say(":no_entry_sign: You are not permitted to use that command.")
+        return
+    else:
+        print("{} is restarting the bot!".format(ctx.message.author))
+        await _shutdown_bot()
+
 
 bot.run(config.token)

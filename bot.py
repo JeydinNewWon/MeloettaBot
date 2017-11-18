@@ -1,5 +1,6 @@
 import discord
 import os
+import heroku3
 import sys
 import subprocess
 import aiohttp
@@ -8,6 +9,9 @@ from utils import opus_loader
 from utils import config as c
 from discord.ext import commands
 
+is_prod = os.environ.get('ON_HEROKU', None)
+
+print(is_prod)
 
 opus_load_status = opus_loader.load_opus_lib()
 
@@ -31,7 +35,16 @@ async def _restart_bot():
     except:
         pass
     await bot.logout()
-    subprocess.call(["python3", "bot.py"])
+
+    if is_prod:
+        try:
+            app = heroku3.api.Heroku.app('meloetta-bot')
+            app.restart()
+            return
+        except:
+            pass
+    else:
+        subprocess.call(["python3", "bot.py"])
 
 async def _shutdown_bot():
     try:

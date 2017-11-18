@@ -26,10 +26,12 @@ async def on_command_error(ctx, error):
         return
 
 async def _restart_bot():
+    '''
     try:
         aiosession.close()
     except:
         pass
+    '''
     await bot.logout()
     subprocess.call(["python3", "bot.py"])
 

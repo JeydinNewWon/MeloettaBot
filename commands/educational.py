@@ -13,7 +13,7 @@ class Educational(object):
         self.bot = bot
 
     @commands.command(pass_context=True)
-    async def eqn(self, ctx, x_1, x_2, y_1, y_2):
+    async def eqn(self, ctx, x_1, y_1, x_2, y_2):
         '''
         coordinate_li = content.split(' ')[1:]
         try:
@@ -25,6 +25,21 @@ class Educational(object):
         except ValueError:
             await self.bot.say('{} Could not calculate equation of straight line due to incorrect coordinate inputs.'.format(fail))
         '''
+
+        if '/' in x_1:
+            x_1  = eval(x_1)
+        elif '/' in x_2:
+            x_2 = eval(x_2)
+        elif '/' in y_1:
+            y_1 = eval(y_1)
+        elif '/' in y_2:
+            y_2 = eval(y_2)
+
+        x_1 = int(x_1)
+        x_2 = int(x_2)
+        y_1 = int(y_1)
+        y_2 = int(y_2)
+
         try:
             m = (y_2 - y_1)/(x_2 - x_1)
             b = str(int(y_2 - m * x_2))

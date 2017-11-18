@@ -25,8 +25,6 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
 
-
-
 async def _restart_bot():
     try:
         aiosession.close()
@@ -54,32 +52,9 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    '''
-    if message.content.startswith('m.spam'):
-        content = message.content[7:]
-        content = content.split(' ')
-        times_to_spam = content[-1]
-        msg_to_spam = str(' '.join(content[0:-1]))
-
-        if message.channel.server.get_member(config.owner_id) in message.mentions:
-            await bot.send_message(message.channel, 'I shall not spam my master!')
-            return
-        elif not times_to_spam.isdigit():
-            await bot.send_message(message.channel, 'I can\'t spam things "{}" times.'.format(times_to_spam))
-            return
-        else:
-            x = int(times_to_spam)
-            if x > 100:
-                await bot.send_message(message.channel, 'I can\'t spam things more than 100 times.')
-                return
-            else:
-                while x > 0:
-                    asyncio.sleep(1)
-                    await bot.send_message(message.channel, msg_to_spam)
-                    x -= 1
-    '''
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
+
 
     await bot.process_commands(message)
 

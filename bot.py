@@ -12,6 +12,7 @@ from discord.ext import commands
 config = c.Config
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
+print(is_prod)
 opus_load_status = opus_loader.load_opus_lib()
 extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational']
 
@@ -32,7 +33,7 @@ async def _restart_bot():
         pass
     await bot.logout()
 
-    if is_prod:
+    if str(is_prod) == True:
         try:
             heroku_conn = heroku3.from_key(HEROKU_KEY)
             app = heroku_conn.apps()['meloetta-bot']

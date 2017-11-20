@@ -1,4 +1,4 @@
-class Config
+class Config:
     token = 'Mzc4NzIxNDgxMjUwNTcwMjQw.DOfnYw.YjcGycdHnnhvxPnBeqNhrZpViNM'
     heroku_api_key = 'cbe75fef-c758-4d08-abf8-e3c9f04b3fd5'
     owner_id = '253803512369119233'

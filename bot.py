@@ -27,16 +27,15 @@ async def on_command_error(ctx, error):
         return
 
 async def _restart_bot():
+    heroku_conn = heroku3.from_key(HEROKU_KEY)
+    app = heroku_conn.apps()['meloetta-bot']
     try:
+        app.restart()
         aiosession.close()
+        await bot.logout()
     except:
         pass
 
-    await bot.logout()
-
-    heroku_conn = heroku3.from_key(HEROKU_KEY)
-    app = heroku_conn.apps()['meloetta-bot']
-    app.restart()
     return
 
     '''

@@ -33,15 +33,13 @@ async def _restart_bot():
         pass
     await bot.logout()
 
-    if str(is_prod) == True:
-        try:
-            heroku_conn = heroku3.from_key(HEROKU_KEY)
-            app = heroku_conn.apps()['meloetta-bot']
-            dyno = app.dynos()['worker.1']
-            dyno.restart()
-            return
-        except:
-            pass
+    if str(is_prod) == 'True':
+        heroku_conn = heroku3.from_key(HEROKU_KEY)
+        app = heroku_conn.apps()['meloetta-bot']
+        dyno = app.dynos()['worker.1']
+
+        dyno.restart()
+        return
     else:
         subprocess.call(["python3", "bot.py"])
 

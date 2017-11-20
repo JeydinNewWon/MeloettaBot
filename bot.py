@@ -34,6 +34,8 @@ async def _restart_bot():
         pass
     '''
 
+    await bot.logout()
+
     heroku_conn = heroku3.from_key(HEROKU_KEY)
     app = heroku_conn.apps()['meloetta-bot']
     app.restart()

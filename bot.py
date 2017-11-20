@@ -9,14 +9,10 @@ from utils import opus_loader
 from utils import config as c
 from discord.ext import commands
 
-is_prod = os.environ.get('ON_HEROKU', None)
-
-print(is_prod)
-
-opus_load_status = opus_loader.load_opus_lib()
-
 config = c.Config
-
+HEROKU_KEY = config.heroku_api_key
+is_prod = os.environ.get('ON_HEROKU', None)
+opus_load_status = opus_loader.load_opus_lib()
 extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational']
 
 bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and functions.", pm_help=None)
@@ -38,8 +34,10 @@ async def _restart_bot():
 
     if is_prod:
         try:
-            app = heroku3.api.Heroku.app('meloetta-bot')
-            app.restart()
+            heroku_conn = heroku3.from_key(HEROKU_KEY)
+            app = heroku_conn.apps()['meloetta-bot']
+            dyno = app.dynos()['worker.1']
+            dyno.restart()
             return
         except:
             pass

@@ -13,17 +13,18 @@ config = c.Config
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
-extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational']
+extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.music']
 
 bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and functions.", pm_help=None)
 bot.remove_command('help')
 aiosession = aiohttp.ClientSession(loop=bot.loop)
 
-
+'''
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
+'''
 
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":

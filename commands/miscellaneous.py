@@ -84,12 +84,14 @@ class Misc(object):
         message = ctx.message
         await self._spam(message, secret_spam=False)
 
-
     @commands.command(pass_context=True)
     async def secretspam(self, ctx):
         message = ctx.message
         await self._spam(message, secret_spam=True)
 
+    @commands.command(pass_context=True)
+    async def g(self, ctx):
+        await self.bot.reply("Can you actually contribute to discussion instead of sending mindless messages?")
 
 
 def setup(bot):

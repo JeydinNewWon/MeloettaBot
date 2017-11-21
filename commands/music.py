@@ -77,7 +77,7 @@ class Queue():
             self.song_list.remove(str(self.current))
             self.skip_votes.clear()
             await self.bot.send_message(self.message.channel, self.current.on_song_playing())
-            await self.voice_client.create_ffmpeg_player(self.current.path, after=self.toggle_next())
+            await self.voice_client.create_ffmpeg_player(self.current.path, after=lambda e: self.play_next_song.set())
             await self.play_next_song.wait()
 
 class Music:

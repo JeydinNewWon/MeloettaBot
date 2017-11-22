@@ -12,14 +12,13 @@ fail = config.fail
 success = config.success
 owner_id = config.owner_id
 
-ytdl_format_options = {"format": "bestaudio/best", "extractaudio": True, "audioformat": "mp3", "noplaylist": True, "nocheckcertificate": True, "ignoreerrors": False, "logtostderr": False, "quiet": True, "no_warnings": True, "default_search": "auto", "source_address": "0.0.0.0", "preferredcodec": "libmp3lame"}
+ytdl_format_options = {"format": "bestaudio/best", "extractaudio": True, "audioformat": "mp3", "noplaylist": True, "nocheckcertificate": True, "ignoreerrors": False, "logtostderr": False, "quiet": True, "no_warnings": True, "default_search": "auto", "source_address": "0.0.0.0", "preferredcodec": "libmp3lame", "forcefilename": True}
 
 
 def get_ytdl(id):
     format = ytdl_format_options
     format["outtmpl"] = "data/music/{}/%(id)s.mp3".format(id)
     return youtube_dl.YoutubeDL(format)
-
 
 
 class Song:
@@ -34,6 +33,7 @@ class Song:
         self.uploader = uploader
         self.thumbnail = thumbnail
         self.webpage_url = webpage_url
+        self.player = None
         if self.duration:
             m, s = divmod(duration, 60)
             h, m = divmod(m, 60)
@@ -77,8 +77,14 @@ class Queue():
             self.song_list.remove(str(self.current))
             self.skip_votes.clear()
             await self.bot.send_message(self.message.channel, self.current.on_song_playing())
-            await self.voice_client.create_ffmpeg_player(self.current.path, after=lambda e: self.play_next_song.set())
+            player = self.voice_client.create_ffmpeg_player(self.current.path, after=lambda e: self.play_next_song.set())
+            self.current.player = player
+            self.current.player.start()
             await self.play_next_song.wait()
+
+    @property
+    def player(self):
+        return self.current.player
 
 class Music:
     def __init__(self, bot):
@@ -166,7 +172,7 @@ class Music:
     async def pause(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.voice_client.pause()
+            queue.player.pause()
         except:
             await self.bot.say('{} Failed to pause song.'.format(fail))
 
@@ -176,7 +182,7 @@ class Music:
     async def resume(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.voice_client.pause()
+            queue.player.resume()
         except:
             await self.bot.say('{} Failed to resume song.'.format(fail))
 
@@ -186,9 +192,10 @@ class Music:
     async def skip(self, ctx):
         queue = self.get_queue(ctx)
         voter = ctx.message.author
-        if voter == queue.current.requester or voter.id == owner_id:
-            queue.voice_client.stop()
-            await self.bot.say('{} Skipping **{}**...'.format(success, queue.current.title))
+        role_names = [i.name.lower() for i in voter.roles]
+        if voter == queue.current.requester or voter.id == owner_id or 'dj' in role_names:
+            queue.player.stop()
+            await self.bot.say('{} Skipping **{}** ...'.format(success, queue.current.title))
         else:
             min_votes = round(len([i.name for i in queue.voice_client.channel.voice_members if i.name != self.bot.user.name]) * 0.6)
 
@@ -199,14 +206,14 @@ class Music:
                 return
 
             if len(queue.skip_votes) >= min_votes:
-                queue.voice_client.stop()
+                queue.player.stop()
                 await self.bot.say('{} Skipping **{}**...'.format(success, queue.current.title))
 
     @commands.command(pass_context=True, no_pm=True)
     async def queue(self, ctx):
         queue = self.get_queue(ctx)
         if queue.current:
-            if not queue.voice_client.is_playing():
+            if not queue.player.is_playing():
                 await self.bot.say('{} Nothing is queued.'.format(fail))
                 return
             else:
@@ -221,19 +228,33 @@ class Music:
             )
             for i in queue.song_list:
                 embed.add_field(
-                    name="{}. {}".format(queue.song_list.index(i) + 1, i.player.title),
+                    name="{}. {}".format(queue.song_list.index(i) + 1, i),
                     value='\u200b'
                 )
 
             await self.bot.say(embed=embed)
 
+    @commands.command(pass_context=True, no_pm=True)
+    async def stop(self, ctx):
+        queue = self.get_queue(ctx)
+        server_id = ctx.message.server.id
+        voice_channel_id = queue.current.voice_channel.id
+        if queue.current:
+            if not queue.player.is_playing():
+                await self.bot.say('{} Nothing is queued.'.format(fail))
+                return
+            else:
+                try:
+                    await queue.voice_client.disconnect()
+                    self.clear_data(server_id)
+                    del self.queues[server_id]
+                    await self.bot.say('{} Successfully disconnected from <#{}>'.format(success, voice_channel_id))
+                except:
+                    pass
+        else:
+            await self.bot.say('{} Nothing is queued.'.format(fail))
+            return
+
 
 def setup(bot):
     bot.add_cog(Music(bot))
-
-
-
-
-
-
-

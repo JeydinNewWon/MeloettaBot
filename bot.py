@@ -26,6 +26,7 @@ async def on_command_error(ctx, error):
         return
 '''
 
+
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":
         heroku_conn = heroku3.from_key(HEROKU_KEY)
@@ -33,6 +34,7 @@ async def _restart_bot(is_prod=is_prod):
         try:
             app.restart()
             aiosession.close()
+            await bot.get_cog("Music").disconnect()
             await bot.logout()
         except:
             pass
@@ -42,9 +44,10 @@ async def _restart_bot(is_prod=is_prod):
 
         try:
             aiosession.close()
+            await bot.get_cog("Music").disconnect()
+            await bot.logout()
         except:
             pass
-        await bot.logout()
 
         subprocess.call(["python3", "bot.py"])
 
@@ -52,6 +55,7 @@ async def _restart_bot(is_prod=is_prod):
 async def _shutdown_bot():
     try:
         aiosession.close()
+        await bot.cogs["Music"].disconnect_all_voice_clients()
     except:
         pass
     await bot.logout()
@@ -64,6 +68,7 @@ async def on_ready():
             bot.load_extension(extension)
         except Exception as e:
             print("Failed to load extension {}\n{}: {}".format(extension, type(e).__name__, e))
+    print(str(discord.__version__))
     print('----------')
     print("Logged in as:")
     print(bot.user)
@@ -96,8 +101,9 @@ async def shutdown(ctx):
         bot.say(":no_entry_sign: You are not permitted to use that command.")
         return
     else:
-        print("{} is restarting the bot!".format(ctx.message.author))
+        print("{} is shutting down the bot!".format(ctx.message.author))
         await _shutdown_bot()
+
 
 
 bot.run(config.token)

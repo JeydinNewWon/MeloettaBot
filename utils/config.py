@@ -1,6 +1,7 @@
 class Config:
     token = 'DISCORD_TOKEN_HERE'
-    heroku_api_key = 'HEROKU_API_KEY_HERE(OPTIONAL)'
+    heroku_api_key = 'HEROKU_API_KEY_HERE (OPTIONAL)'
+    heroku_app_name = 'YOUR_HEROKU_APP_NAME_HERE (OPTIONAL)'
     owner_id = 'OWNER_ID_HERE'
     owner_user_name = 'OWNER_USER_NAME_HERE'
     command_prefix = 'COMMAND_PREFIX_HERE'

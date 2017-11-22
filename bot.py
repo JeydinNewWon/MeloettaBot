@@ -29,7 +29,7 @@ async def on_command_error(ctx, error):
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":
         heroku_conn = heroku3.from_key(HEROKU_KEY)
-        app = heroku_conn.apps()['meloetta-bot']
+        app = heroku_conn.apps()[config.heroku_app_name]
         try:
             app.restart()
             aiosession.close()

@@ -239,13 +239,11 @@ class Music:
         queue = self.get_queue(ctx)
         server_id = ctx.message.server.id
         voice_channel_id = queue.current.voice_channel.id
-        try:
-            await queue.voice_client.disconnect()
-            self.clear_data(server_id)
-            del self.queues[server_id]
-            await self.bot.say('{} Successfully disconnected from <#{}>'.format(success, voice_channel_id))
-        except:
-            pass
+        await queue.voice_client.disconnect()
+        self.clear_data(server_id)
+        del self.queues[server_id]
+        await self.bot.say('{} Successfully disconnected from <#{}>'.format(success, voice_channel_id))
+
 
 
 def setup(bot):

@@ -242,8 +242,8 @@ class Music:
         await queue.voice_client.disconnect()
         self.clear_data(server_id)
         del self.queues[server_id]
+        print(self.queues)
         await self.bot.say('{} Successfully disconnected from <#{}>'.format(success, voice_channel_id))
-
 
 
 def setup(bot):

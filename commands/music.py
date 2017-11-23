@@ -335,7 +335,7 @@ class Music:
             return
 
         voter = ctx.message.author
-        author_role_names = [role.name.lower() for role in voter]
+        author_role_names = [role.name.lower() for role in voter.roles]
         if voter == queue.current.requester or voter.id == owner_id or 'dj' in author_role_names:
             queue.player.stop()
             await self.bot.say(':track_next: Skipping **{}** ...'.format(queue.current.title))

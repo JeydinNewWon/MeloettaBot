@@ -66,7 +66,6 @@ class Queue():
         self.audio_player = self.bot.loop.create_task(self.audio_change_task())
         self.skip_votes = []
 
-
     def toggle_next(self):
         self.bot.loop.call_soon_threadsafe(self.play_next_song.set())
 
@@ -77,7 +76,7 @@ class Queue():
             self.song_list.remove(str(self.current))
             self.skip_votes.clear()
             await self.bot.send_message(self.message.channel, self.current.on_song_playing())
-            player = self.voice_client.create_ffmpeg_player(self.current.path, after=lambda e: self.play_next_song.set())
+            player = self.voice_client.create_ffmpeg_player(self.current.path, after=self.toggle_next)
             self.current.player = player
             self.current.player.start()
             await self.play_next_song.wait()
@@ -100,11 +99,13 @@ class Music:
         else:
             return queue
 
-    async def disconnect(self):
+    async def disconnect_all_voice_clients(self):
         queues = self.queues
         for id in queues:
             try:
+                self.queues[id].player.stop()
                 await self.queues[id].voice_client.disconnect()
+                self.queues[id].audio_player.cancel()
                 self.clear_data(id)
                 del self.queues[id]
             except:
@@ -165,7 +166,7 @@ class Music:
             print(traceback.format_exc())
             return
         await queue.songs.put(song)
-        queue.song_list.append(str(song))
+        queue.song_list.append(song)
         await self.bot.say(embed=song.embed())
 
     @commands.command(pass_context=True, no_pm=True)
@@ -228,8 +229,8 @@ class Music:
             )
             for i in queue.song_list:
                 embed.add_field(
-                    name="{}. {}".format(queue.song_list.index(i) + 1, i),
-                    value='\u200b'
+                    name="{}. {}".format(queue.song_list.index(i) + 1, i.title),
+                    value=str(i.duration)
                 )
 
             await self.bot.say(embed=embed)
@@ -239,7 +240,9 @@ class Music:
         queue = self.get_queue(ctx)
         server_id = ctx.message.server.id
         voice_channel_id = queue.current.voice_channel.id
-        await queue.voice_client.disconnect()
+        queue.player.stop()
+        self.bot.loop.create_task(queue.voice_client.disconnect())
+        queue.audio_player.cancel()
         self.clear_data(server_id)
         del self.queues[server_id]
         print(self.queues)

@@ -20,12 +20,12 @@ bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta B
 bot.remove_command('help')
 aiosession = aiohttp.ClientSession(loop=bot.loop)
 
-
+'''
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
-
+'''
 
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":
@@ -34,7 +34,7 @@ async def _restart_bot(is_prod=is_prod):
         try:
             app.restart()
             aiosession.close()
-            await bot.get_cog("Music").disconnect()
+            await bot.get_cog("Music").disconnect_all_voice_clients()
             await bot.logout()
         except:
             pass
@@ -44,7 +44,7 @@ async def _restart_bot(is_prod=is_prod):
 
         try:
             aiosession.close()
-            await bot.get_cog("Music").disconnect()
+            await bot.get_cog("Music").disconnect_all_voice_clients()
             await bot.logout()
         except:
             pass

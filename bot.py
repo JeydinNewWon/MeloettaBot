@@ -103,6 +103,4 @@ async def shutdown(ctx):
         print("{} is shutting down the bot!".format(ctx.message.author))
         await _shutdown_bot()
 
-
-
 bot.run(config.token)

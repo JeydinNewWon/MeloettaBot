@@ -173,9 +173,10 @@ class Music:
     async def pause(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.player.pause()
+            queue.current.player.pause()
         except:
             await self.bot.say('{} Failed to pause song.'.format(fail))
+            return
 
         await self.bot.say('{} Successfully paused **{}**.'.format(success, queue.current.title))
 
@@ -183,9 +184,10 @@ class Music:
     async def resume(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.player.resume()
+            queue.current.player.resume()
         except:
             await self.bot.say('{} Failed to resume song.'.format(fail))
+            return
 
         await self.bot.say('{} Successfully resumed **{}**.'.format(success, queue.current.title))
 

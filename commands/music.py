@@ -12,7 +12,21 @@ fail = config.fail
 success = config.success
 owner_id = config.owner_id
 
-ytdl_format_options = {"format": "bestaudio/best", "extractaudio": True, "audioformat": "mp3", "noplaylist": True, "nocheckcertificate": True, "ignoreerrors": False, "logtostderr": False, "quiet": True, "no_warnings": True, "default_search": "auto", "source_address": "0.0.0.0", "preferredcodec": "libmp3lame", "forcefilename": True}
+ytdl_format_options = {
+    "format": "bestaudio/best",
+    "extractaudio": True,
+    "audioformat": "mp3",
+    "noplaylist": True,
+    "nocheckcertificate": True,
+    "ignoreerrors": False,
+    "logtostderr": False,
+    "quiet": True,
+    "no_warnings": True,
+    "default_search": "auto",
+    "source_address": "0.0.0.0",
+    "preferredcodec": "libmp3lame",
+    "forcefilename": True
+}
 
 def get_ytdl(id):
     format = ytdl_format_options
@@ -92,6 +106,7 @@ class Queue:
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
             await self.play_next_song.wait()
+
 
 class Music:
     def __init__(self, bot):
@@ -238,6 +253,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if queue.is_playing():
             player = queue.player
@@ -256,6 +276,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if not queue.is_playing():
             return
@@ -274,6 +299,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if not queue.is_playing():
             return
@@ -292,10 +322,16 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
-        votes_needed = round(len([i.name for i in queue.voice_client.channel.voice_members if i.name != self.bot.user.name]) * 0.5)
+        votes_needed = round(
+            len([i.name for i in queue.voice_client.channel.voice_members if i.name != self.bot.user.name]) * 0.5)
+        author_voice = ctx.message.author.voice.voice_channel
 
         if not queue.is_playing():
             await self.bot.say('{} Nothing is playing...'.format(fail))
+            return
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
             return
 
         voter = ctx.message.author
@@ -310,7 +346,8 @@ class Music:
                 await self.bot.say('{} Skipping **{}** ...'.format(success, queue.current.title))
                 queue.skip()
             else:
-                await self.bot.say('{} Skip vote added, currently at `{}/{}`'.format(success, total_votes, votes_needed))
+                await self.bot.say(
+                    '{} Skip vote added, currently at `{}/{}`'.format(success, total_votes, votes_needed))
         else:
             await self.bot.say('{} You have already voted to skip.'.format(fail))
 

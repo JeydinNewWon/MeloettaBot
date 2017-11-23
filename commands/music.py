@@ -73,7 +73,6 @@ class Queue:
         self.bot = bot
         self.voice_client = voice_client
         self.play_next_song = asyncio.Event()
-        self.song_list = []
         self.current = None
         self.skip_votes = set()
         self.songs = asyncio.Queue()

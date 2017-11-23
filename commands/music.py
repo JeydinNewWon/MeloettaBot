@@ -67,7 +67,7 @@ class Queue():
         self.skip_votes = []
 
     def toggle_next(self):
-        self.bot.loop.call_soon_threadsafe(self.play_next_song.set())
+        self.bot.loop.call_soon_threadsafe(self.play_next_song.set)
 
     async def audio_change_task(self):
         while True:

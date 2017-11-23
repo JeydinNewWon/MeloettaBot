@@ -76,7 +76,7 @@ class Queue():
             self.song_list.remove(str(self.current))
             self.skip_votes.clear()
             await self.bot.send_message(self.message.channel, self.current.on_song_playing())
-            player = self.voice_client.create_ffmpeg_player(self.current.path, after=self.toggle_next)
+            player = self.voice_client.create_ffmpeg_player(self.current.path, after=lambda e: self.play_next_song.set())
             self.current.player = player
             self.current.player.start()
             await self.play_next_song.wait()
@@ -173,7 +173,7 @@ class Music:
     async def pause(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.current.player.pause()
+            queue.player.pause()
         except:
             await self.bot.say('{} Failed to pause song.'.format(fail))
             return
@@ -184,7 +184,7 @@ class Music:
     async def resume(self, ctx):
         queue = self.get_queue(ctx)
         try:
-            queue.current.player.resume()
+            queue.player.resume()
         except:
             await self.bot.say('{} Failed to resume song.'.format(fail))
             return

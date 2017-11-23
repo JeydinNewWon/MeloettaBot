@@ -238,6 +238,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if queue.is_playing():
             player = queue.player
@@ -256,6 +261,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if not queue.is_playing():
             return
@@ -274,6 +284,11 @@ class Music:
 
         server = ctx.message.server
         queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
 
         if not queue.is_playing():
             return
@@ -293,9 +308,14 @@ class Music:
         server = ctx.message.server
         queue = self.get_queue(server)
         votes_needed = round(len([i.name for i in queue.voice_client.channel.voice_members if i.name != self.bot.user.name]) * 0.5)
+        author_voice = ctx.message.author.voice.voice_channel
 
         if not queue.is_playing():
             await self.bot.say('{} Nothing is playing...'.format(fail))
+            return
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
             return
 
         voter = ctx.message.author

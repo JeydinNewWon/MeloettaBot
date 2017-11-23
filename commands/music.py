@@ -291,7 +291,7 @@ class Music:
             await self.bot.say('{} Failed to pause song.'.format(fail))
             return
 
-        await self.bot.say('{} Successfully paused **{}**.'.format(success, queue.current.title))
+        await self.bot.say(':pause_button: Successfully paused **{}**.'.format(queue.current.title))
 
     @commands.command(pass_context=True, no_pm=True)
     async def resume(self, ctx):
@@ -314,7 +314,7 @@ class Music:
             await self.bot.say('{} Failed to resume song.'.format(fail))
             return
 
-        await self.bot.say('{} Successfully resumed **{}**.'.format(success, queue.current.title))
+        await self.bot.say(':arrow_forward: Successfully resumed **{}**.'.format(queue.current.title))
 
     @commands.command(pass_context=True, no_pm=True)
     async def skip(self, ctx):
@@ -338,12 +338,12 @@ class Music:
         author_role_names = [role.name.lower() for role in voter]
         if voter == queue.current.requester or voter.id == owner_id or 'dj' in author_role_names:
             queue.player.stop()
-            await self.bot.say('{} Skipping **{}** ...'.format(success, queue.current.title))
+            await self.bot.say(':track_next: Skipping **{}** ...'.format(queue.current.title))
         elif voter.id not in queue.skip_votes:
             queue.skip_votes.add(voter.id)
             total_votes = len(queue.skip_votes)
             if total_votes >= votes_needed:
-                await self.bot.say('{} Skipping **{}** ...'.format(success, queue.current.title))
+                await self.bot.say(':track_next: Skipping **{}** ...'.format(queue.current.title))
                 queue.skip()
             else:
                 await self.bot.say(

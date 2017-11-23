@@ -12,7 +12,21 @@ fail = config.fail
 success = config.success
 owner_id = config.owner_id
 
-ytdl_format_options = {"format": "bestaudio/best", "extractaudio": True, "audioformat": "mp3", "noplaylist": True, "nocheckcertificate": True, "ignoreerrors": False, "logtostderr": False, "quiet": True, "no_warnings": True, "default_search": "auto", "source_address": "0.0.0.0", "preferredcodec": "libmp3lame", "forcefilename": True}
+ytdl_format_options = {
+    "format": "bestaudio/best",
+    "extractaudio": True,
+    "audioformat": "mp3",
+    "noplaylist": True,
+    "nocheckcertificate": True,
+    "ignoreerrors": False,
+    "logtostderr": False,
+    "quiet": True,
+    "no_warnings": True,
+    "default_search": "auto",
+    "source_address": "0.0.0.0",
+    "preferredcodec": "libmp3lame",
+    "forcefilename": True
+}
 
 def get_ytdl(id):
     format = ytdl_format_options

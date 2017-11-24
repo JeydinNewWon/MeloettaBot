@@ -107,6 +107,15 @@ class Queue:
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
             await self.play_next_song.wait()
+            if len([i.name for i in self.voice_client.channel.voice_members if i != self.bot.name]) == 0:
+                self.current.player.stop()
+                self.audio_player.cancel()
+                await self.voice_client.disconnect()
+                Music(self.bot).clear_data(self.voice_client.server.id)
+                queue = Music(self.bot).queues[self.voice_client.server.id]
+                del queue
+                await self.bot.send_message(self.current.channel, '{} Disconnected from voice channel and cleared the queue due to inactivity.'.format(success))
+                return
 
 
 class Music:

@@ -83,8 +83,10 @@ class Queue:
     def set_repeat(self):
         if not self.repeat:
             self.repeat = True
+            return True
         elif self.repeat:
             self.repeat = False
+            return False
         else:
             return
 
@@ -107,13 +109,14 @@ class Queue:
         if self.is_playing():
             self.player.stop()
 
+    def get_songs(self):
+        return self.songs
+
     async def audio_player_task(self):
         while True:
-            if not self.repeat:
-                self.play_next_song.clear()
+            self.play_next_song.clear()
             self.current = await self.songs.get()
-            if not self.repeat:
-                self.song_list.remove(self.current)
+            self.song_list.remove(self.current)
             self.skip_votes.clear()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
@@ -218,6 +221,7 @@ class Music:
             print(traceback.format_exc())
             return
         else:
+
             path = video_info['path']
             title = video_info['title']
             duration = video_info['duration']
@@ -377,6 +381,7 @@ class Music:
             embed = queue.current.embed()
             await self.bot.say(embed=embed)
 
+    '''
     @commands.command(pass_context=True, no_pm=True)
     async def repeat(self, ctx):
         server = ctx.message.server
@@ -391,7 +396,15 @@ class Music:
             await self.bot.say('{} Nothing is playing...'.format(fail))
             return
 
-        queue.set_repeat()
+        repeat_state = queue.set_repeat()
+
+        if repeat_state:
+            await self.bot.say('{} Repeat state set to True.'.format(':repeat:'))
+        else:
+            await self.bot.say('{} Repeat state set to False.'.format(':repeat:'))
+
+        print(queue.repeat)
+    '''
 
 
 def setup(bot):

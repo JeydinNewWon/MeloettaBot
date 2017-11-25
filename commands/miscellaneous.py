@@ -93,6 +93,10 @@ class Misc(object):
     async def g(self, ctx):
         await self.bot.reply("Can you actually contribute to discussion instead of sending mindless messages?")
 
+    @commands.command(pass_context=True)
+    async def wherearethelights(self, ctx):
+        await self.bot.reply("I DON'T KNOW!")
+
 
 def setup(bot):
     bot.add_cog(Misc(bot))

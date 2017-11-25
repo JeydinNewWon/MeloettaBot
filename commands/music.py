@@ -71,6 +71,7 @@ class Song:
 class Queue:
     def __init__(self, bot, voice_client):
         self.bot = bot
+        self.repeat = False
         self.voice_client = voice_client
         self.play_next_song = asyncio.Event()
         self.current = None
@@ -78,6 +79,14 @@ class Queue:
         self.songs = asyncio.Queue()
         self.song_list = []
         self.audio_player = self.bot.loop.create_task(self.audio_player_task())
+
+    def set_repeat(self):
+        if not self.repeat:
+            self.repeat = True
+        elif self.repeat:
+            self.repeat = False
+        else:
+            return
 
     def is_playing(self):
         if self.voice_client is None or self.current is None:
@@ -100,9 +109,11 @@ class Queue:
 
     async def audio_player_task(self):
         while True:
-            self.play_next_song.clear()
+            if not self.repeat:
+                self.play_next_song.clear()
             self.current = await self.songs.get()
-            self.song_list.remove(self.current)
+            if not self.repeat:
+                self.song_list.remove(self.current)
             self.skip_votes.clear()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
@@ -247,6 +258,8 @@ class Music:
                 )
 
             await self.bot.say(embed=embed)
+        else:
+            await self.bot.say('{} Nothing is queued...'.format(fail))
 
     @commands.command(pass_context=True, no_pm=True)
     async def stop(self, ctx):
@@ -363,6 +376,22 @@ class Music:
         else:
             embed = queue.current.embed()
             await self.bot.say(embed=embed)
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def repeat(self, ctx):
+        server = ctx.message.server
+        queue = self.get_queue(server)
+        author_voice = ctx.message.author.voice.voice_channel
+
+        if author_voice != queue.voice_client.channel and ctx.message.author.id != owner_id:
+            await self.bot.say('{} You\'re not in the correct voice channel.'.format(fail))
+            return
+
+        if not queue.is_playing():
+            await self.bot.say('{} Nothing is playing...'.format(fail))
+            return
+
+        queue.set_repeat()
 
 
 def setup(bot):

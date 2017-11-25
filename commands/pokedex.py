@@ -37,6 +37,8 @@ class PokeDex(object):
 
     @commands.command(pass_context=True)
     async def pokedex(self, ctx, pokemon):
+        await self.bot.send_typing(ctx.message.channel)
+
         pokemon = pokemon.lower()
         pokemon_info = await self.get_pokemon_info(pokemon)
         embed = discord.Embed(
@@ -54,9 +56,9 @@ class PokeDex(object):
             ability_name = ability.get('ability').get('name')
             if ability.get('is_hidden'):
                 ability_name += ' **(Hidden)**'
-            ability_list.append(ability_name)
+            ability_list.append(ability_name.title())
 
-        abilities = ' '.join(ability_list)
+        abilities = ', '.join(ability_list)
 
         embed.set_image(url=pokemon_pic)
         embed.add_field(name='HP', value=base_stats[0], inline=True)

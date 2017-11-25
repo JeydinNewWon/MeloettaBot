@@ -27,6 +27,7 @@ async def on_command_error(ctx, error):
         return
 '''
 
+
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":
         heroku_conn = heroku3.from_key(HEROKU_KEY)

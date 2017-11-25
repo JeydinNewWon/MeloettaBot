@@ -5,3 +5,4 @@ aiohttp
 chardet
 youtube_dl
 heroku3
+pokebase

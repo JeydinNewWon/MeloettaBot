@@ -1,7 +1,7 @@
 discord.py[voice]==0.16.12
-PyDictionary==1.5.2
 googletrans==2.2.0
 aiohttp
 chardet
 youtube_dl
 heroku3
+pokebase

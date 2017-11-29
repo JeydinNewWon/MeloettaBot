@@ -246,6 +246,8 @@ class Music:
                 )
 
             await self.bot.say(embed=embed)
+        else:
+            await self.bot.say('{} Nothing is queued...'.format(fail))
 
     @commands.command(pass_context=True, no_pm=True)
     async def stop(self, ctx):

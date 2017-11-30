@@ -38,7 +38,7 @@ python3 bot.py
 
 ## Music Module
 
-Here are the steps to install the Music Module for Meloetta.
+Here are the steps to install the Music Module for Meloetta. (Please follow the procedure above before following this one).
 
 1. Go to https://developer.apple.com/account/. Sign in with your Apple ID or create a new one.
 2. Go to Downloads, (or Download Tools), scroll down, and click, 'See more downloads'.

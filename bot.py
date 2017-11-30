@@ -22,12 +22,12 @@ bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta B
 bot.remove_command('help')
 aiosession = aiohttp.ClientSession(loop=bot.loop)
 
-'''
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
-'''
+
 
 async def _restart_bot(is_prod=is_prod):
     if str(is_prod) == "True":

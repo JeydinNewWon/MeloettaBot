@@ -19,7 +19,6 @@ class Moderation(object):
             return
         else:
             for i in message.channel.server.roles:
-                print(i.id)
                 if i.id == _id:
                     return i
 

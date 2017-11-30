@@ -36,7 +36,7 @@ python3 bot.py
 ```
 7. When the bot prints its details out on the console, it means it's online and working!
 
-##Music Module
+## Music Module
 
 TBA
 

@@ -64,6 +64,10 @@ async def _shutdown_bot():
 
 @bot.event
 async def on_ready():
+
+    if os.path.isdir('data/music'):
+        bot.get_cog("Music").clear_data()
+
     for extension in extensions:
         #bot.load_extension(extension)
         try:

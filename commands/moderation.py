@@ -3,10 +3,10 @@ import asyncio
 from discord.ext import commands
 from utils import config as c
 
-config = c.Config
+config = c.Config()
 success = config.success
 fail = config.fail
-s_id = config.mute_role_id
+s_id = str(config.mute_role_id)
 d_id = config.default_server_role_id
 mod_ids = config.mod_role_ids
 
@@ -19,6 +19,7 @@ class Moderation(object):
             return
         else:
             for i in message.channel.server.roles:
+                print(i.id)
                 if i.id == _id:
                     return i
 
@@ -36,6 +37,9 @@ class Moderation(object):
             _could_not_mute = []
             snake_role = [self.get_role(s_id, message)]
 
+            if not snake_role:
+                return
+
             for member in member_li:
                 try:
                     member_roles = member.roles
@@ -45,6 +49,7 @@ class Moderation(object):
                     _muted.append(member.name)
                 except discord.Forbidden:
                     _could_not_mute.append(member.name)
+
 
             if len(_muted) > 0:
                 await self.bot.say('{} Successfully muted {} from **{}**.'.format(success, ', '.join(_muted), message.channel.server.name))

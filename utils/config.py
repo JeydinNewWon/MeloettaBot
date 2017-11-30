@@ -1,13 +1,39 @@
+import os
+import configparser
+import shutil
+
+
 class Config:
-    token = 'DISCORD_TOKEN_HERE'
-    heroku_api_key = 'HEROKU_API_KEY_HERE (OPTIONAL)'
-    heroku_app_name = 'YOUR_HEROKU_APP_NAME_HERE (OPTIONAL)'
-    owner_id = 'OWNER_ID_HERE'
-    owner_user_name = 'OWNER_USER_NAME_HERE'
-    command_prefix = 'COMMAND_PREFIX_HERE'
-    success = ':white_check_mark:'
-    fail = ':no_entry_sign:'
-    mute_role_id = 'MUTE_SERVER_ROLE_ID_HERE'
-    default_server_role_id = 'DEFAULT_SERVER_ROLE_ID_HERE'
-    mod_role_ids = ['LIST_OF_MOD_ROLE_IDS_HERE']
-    invite = 'BOT_INVITE_HERE'
+    def __init__(self):
+        self.config_file = 'config/config.ini'
+
+        if not os.path.isfile(self.config_file):
+            print('ERROR: YOU HAVE NOT CONFIGURED THE BOT. EDIT THE config.ini file in the config folder to run this bot.')
+            os._exit(1)
+
+
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(self.config_file, encoding="utf-8")
+
+
+        self.token = config.get('Bot', 'Token', fallback=None)
+        self.heroku_api_key = config.get('Heroku', 'heroku_api_key', fallback=None)
+        self.heroku_app_name = config.get('Heroku', 'heroku_app_name', fallback=None)
+        self.owner_id = config.get('Credentials', 'owner_id', fallback=None)
+        self.owner_user_name = config.get('Credentials', 'owner_user_name', fallback=None)
+        self.command_prefix = config.get('Bot', 'command_prefix', fallback='!')
+        self.success = ':white_check_mark:'
+        self.fail = ':no_entry_sign:'
+        self.mute_role_id = config.get('Credentials', 'mute_role_id', fallback=None)
+        self.default_server_role_id = config.get('Credentials', 'default_server_role_id', fallback=None)
+        self.mod_role_ids = config.get('Credentials', 'mod_role_ids', fallback=None).split(', ')
+        self.invite = config.get('Bot', 'invite', fallback=None)
+
+        if not self.token:
+            print('ERROR: THE BOT HAS NOT BEEN SUPPLIED WITH A BOT TOKEN.')
+            os._exit(1)
+
+
+
+
+

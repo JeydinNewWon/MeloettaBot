@@ -4,7 +4,7 @@ from fractions import Fraction
 from utils import config as c
 from discord.ext import commands
 
-config = c.Config
+config = c.Config()
 fail = config.fail
 success = config.success
 

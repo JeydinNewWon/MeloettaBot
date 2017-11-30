@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import config as c
 import pokebase as pb
 
-config = c.Config
+config = c.Config()
 fail = config.fail
 success = config.success
 

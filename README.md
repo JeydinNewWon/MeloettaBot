@@ -44,11 +44,10 @@ Here are the steps to install the Music Module for Meloetta. (Please follow the 
 2. Go to Downloads, (or Download Tools), scroll down, and click, 'See more downloads'.
 3. Search 'command line' in the search bar; then, find the Command Line tool that fits your macOS version. (You can check your version by clicking the Apple logo at the top of your screen, 'About this Mac', then click 'Overview'.
 4. Download the command line tool that fits your macOS, open it, then install it.
-5. Open Terminal and run the following command into it:
+5. Open Terminal and run the following command into it (Wait for the program to finish installing).:
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-Wait for the program to finish installing.
 6. Then, run the following commands in Terminal ONE AT a time,
 ```
 brew install ffmpeg

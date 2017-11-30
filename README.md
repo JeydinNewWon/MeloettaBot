@@ -27,7 +27,7 @@ Invite link: `https://discordapp.com/oauth2/authorize?client_id=3787214812505702
 cd ~/Desktop/Meloetta-public/
 pip3 install -r requirements.txt
 ```
-4. Open your code editor and open `config.ini` in the config folder **inside the editor**.
+4. Once the requirements have finished installing, open your code editor and open `config.ini` in the config folder **inside the editor**.
 5. Go to https://discordapp.com/developers/applications/me and create a bot application or open an existing one. **MAKE SURE YOU HAVE CREATED A BOT USER**. Add all the data as instructed into config.ini. **The most important being the bot's token, which is found by scrolling down on your application page after creating a Bot User Account.**
 6. Then run this in Terminal,
 ```

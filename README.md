@@ -54,6 +54,7 @@ brew install ffmpeg
 brew install opus
 ```
 `Note: You probably won't have to use brew install opus since I've already included the Mac Opus library in the bin folder. However, install it just in case.`
+
 7. After all the steps, you can run the bot again by running in Terminal,
 ```
 cd ~/Desktop/Meloetta-public/

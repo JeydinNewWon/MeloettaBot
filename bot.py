@@ -10,8 +10,8 @@ from utils import config as c
 from discord.ext import commands
 
 config = c.Config
-HEROKU_KEY = config.heroku_api_key
-APP_NAME = config.heroku_app_name
+HEROKU_KEY = config.heroku_api_key_2
+APP_NAME = config.heroku_app_name_2
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
 extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.music', 'commands.pokedex']

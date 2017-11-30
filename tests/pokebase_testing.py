@@ -6,8 +6,7 @@ import json
 
 
 #pokemon = pokebase.pokemon('rockruff')
-inaff = pokebase.api.make_obj(pokebase.api.lookup_data('pokemon', 'gardevoir'))
-types = inaff.id
+inaff = pokebase.api.make_obj(pokebase.api.lookup_data('pokemon', 'lycanroc-midnight'))
 
 
-print(types)
+print(inaff)

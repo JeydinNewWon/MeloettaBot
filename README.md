@@ -38,7 +38,35 @@ python3 bot.py
 
 ## Music Module
 
-TBA
+Here are the steps to install the Music Module for Meloetta.
+
+1. Go to https://developer.apple.com/account/. Sign in with your Apple ID or create a new one.
+2. Go to Downloads, (or Download Tools), scroll down, and click, 'See more downloads'.
+3. Search 'command line' in the search bar; then, find the Command Line tool that fits your macOS version. (You can check your version by clicking the Apple logo at the top of your screen, 'About this Mac', then click 'Overview'.
+4. Download the command line tool that fits your macOS, open it, then install it.
+5. Open Terminal and run the following command into it:
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+Wait for the program to finish installing.
+6. Then, run the following commands in Terminal ONE AT a time,
+```
+brew install ffmpeg
+brew install opus
+```
+
+`Note: You probably won't have to use brew install opus since I've already included the Mac Opus library in the bin folder. However, install it just in case.`
+7. After all the steps, you can run the bot again by running in Terminal,
+```
+cd ~/Desktop/Meloetta-public/
+python3 bot.py
+```
+
+***
+
+LICENSE: Apache-2.0
+
+
 
 
 

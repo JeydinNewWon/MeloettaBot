@@ -64,10 +64,6 @@ async def _shutdown_bot():
 
 @bot.event
 async def on_ready():
-
-    if os.path.isdir('data/music'):
-        bot.get_cog("Music").clear_data()
-
     for extension in extensions:
         #bot.load_extension(extension)
         try:
@@ -90,6 +86,12 @@ async def on_ready():
         bot.remove_cog('Moderation')
         print('Removed the Moderation module because the mute role, the default server role or the moderator roles have not been specified.')
     print('----------')
+    
+    if os.path.isdir('data/music'):
+        try: 
+            bot.get_cog("Music").clear_data()
+        except:
+            pass
 
 
 @bot.event

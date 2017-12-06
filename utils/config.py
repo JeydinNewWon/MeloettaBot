@@ -16,7 +16,7 @@ class Config:
         config.read(self.config_file, encoding="utf-8")
 
 
-        self.token = config.get('Bot', 'Token', fallback=None)
+        self.token = config.get('Bot', 'token', fallback=None)
         self.heroku_api_key = config.get('Heroku', 'heroku_api_key', fallback=None)
         self.heroku_app_name = config.get('Heroku', 'heroku_app_name', fallback=None)
         self.owner_id = config.get('Credentials', 'owner_id', fallback=None)

@@ -1,15 +1,33 @@
+import os
+import configparser
+
+
 class Config:
-    token = 'Mzc4NzIxNDgxMjUwNTcwMjQw.DOfnYw.YjcGycdHnnhvxPnBeqNhrZpViNM'
-    heroku_api_key = 'cbe75fef-c758-4d08-abf8-e3c9f04b3fd5'
-    heroku_app_name = 'meloetta-bot'
-    heroku_api_key_2 = '4d1d5b41-9c6c-4c34-bcc7-a35f0abf4995'
-    heroku_app_name_2 = 'meloetta-discord'
-    owner_id = '253803512369119233'
-    owner_user_name = 'JeydinNewWon#4863'
-    command_prefix = 'm.'
-    success = ':white_check_mark:'
-    fail = ':no_entry_sign:'
-    mute_role_id = '353500331361042453'
-    default_server_role_id = '352029401518571530'
-    mod_role_ids = ['345876301510344704', '352029385361981440', '345876015471525888', '381326249823305738']
-    invite = 'https://discordapp.com/oauth2/authorize?client_id=378721481250570240&scope=bot&permissions=2146958591'
+    def __init__(self):
+        self.config_file = 'config/config.ini'
+
+        if not os.path.isfile(self.config_file):
+            print('ERROR: YOU HAVE NOT CONFIGURED THE BOT. EDIT THE config.ini file in the config folder to run this bot.')
+            os._exit(1)
+
+
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(self.config_file, encoding="utf-8")
+
+
+        self.token = config.get('Bot', 'token', fallback=None)
+        self.heroku_api_key = config.get('Heroku', 'heroku_api_key', fallback=None)
+        self.heroku_app_name = config.get('Heroku', 'heroku_app_name', fallback=None)
+        self.owner_id = config.get('Credentials', 'owner_id', fallback=None)
+        self.owner_user_name = config.get('Credentials', 'owner_user_name', fallback=None)
+        self.command_prefix = config.get('Bot', 'command_prefix', fallback='!')
+        self.success = ':white_check_mark:'
+        self.fail = ':no_entry_sign:'
+        self.mute_role_id = config.get('Credentials', 'mute_role_id', fallback=None)
+        self.default_server_role_id = config.get('Credentials', 'default_server_role_id', fallback=None)
+        self.mod_role_ids = config.get('Credentials', 'mod_role_ids', fallback=None).split(', ')
+        self.invite = config.get('Bot', 'invite', fallback=None)
+
+        if not self.token:
+            print('ERROR: THE BOT HAS NOT BEEN SUPPLIED WITH A BOT TOKEN.')
+            os._exit(1)

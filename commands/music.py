@@ -7,7 +7,7 @@ import youtube_dl
 from discord.ext import commands
 from utils.config import Config
 
-config = Config
+config = Config()
 fail = config.fail
 success = config.success
 owner_id = config.owner_id

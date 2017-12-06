@@ -3,7 +3,7 @@ import asyncio
 from discord.ext import commands
 from utils import config as c
 
-config = c.Config
+config = c.Config()
 success = config.success
 fail = config.fail
 s_id = config.mute_role_id

@@ -4,7 +4,7 @@ import googletrans
 from discord.ext import commands
 from utils import config as c
 
-config = c.Config
+config = c.Config()
 
 class Misc(object):
     def __init__(self, bot):

@@ -125,8 +125,6 @@ async def invite(ctx):
     else:
         await bot.say('**Invite link:** {}'.format(config.invite))
 
-print(type(config.token))
-
 bot.run(config.token)
 
 

@@ -1,18 +1,20 @@
 import discord
 import os
 import heroku3
-import sys
 import subprocess
 import aiohttp
-import asyncio
+from utils import clever
 from utils import opus_loader
 from utils import config as c
 from discord.ext import commands
 
 config = c.Config()
+
 s_id = str(config.mute_role_id)
 d_id = config.default_server_role_id
 mod_ids = config.mod_role_ids
+CLEVERBOT_USER = config.cleverbot_user
+CLEVERBOT_KEY = config.cleverbot_key
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
@@ -81,7 +83,7 @@ async def on_ready():
     if not discord.opus.is_loaded():
         bot.remove_cog('Music')
         print('Removed the Music module because the opus library is not loaded.')
-    print('\n')
+        print('\n')
     if not s_id or not d_id or not mod_ids:
         bot.remove_cog('Moderation')
         print('Removed the Moderation module because the mute role, the default server role or the moderator roles have not been specified.')
@@ -98,6 +100,19 @@ async def on_ready():
 async def on_message(message):
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
+
+    if str(message.content).startswith('<@378721481250570240>'):
+        cn = message.channel
+        query = message.content.split(' ')[1: ]
+        query = ' '.join(query)
+        cleverbot = clever.CleverBot(user=CLEVERBOT_USER, key=CLEVERBOT_KEY)
+        rsp = None
+        try:
+            rsp = cleverbot.query(query)
+        except:
+            pass
+
+        await bot.send_message(cn, rsp)
 
     await bot.process_commands(message)
 

@@ -1,6 +1,5 @@
 import os
 import configparser
-import shutil
 
 
 class Config:
@@ -28,12 +27,9 @@ class Config:
         self.default_server_role_id = config.get('Credentials', 'default_server_role_id', fallback=None)
         self.mod_role_ids = config.get('Credentials', 'mod_role_ids', fallback=None).split(', ')
         self.invite = config.get('Bot', 'invite', fallback=None)
+        self.cleverbot_user = config.get('Credentials', 'cleverbot_user', fallback=None)
+        self.cleverbot_key = config.get('Credentials', 'cleverbot_key', fallback=None)
 
         if not self.token:
             print('ERROR: THE BOT HAS NOT BEEN SUPPLIED WITH A BOT TOKEN.')
             os._exit(1)
-
-
-
-
-

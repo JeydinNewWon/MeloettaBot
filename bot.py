@@ -103,6 +103,9 @@ async def on_message(message):
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
 
+    if 'cancer' in message.content:
+        print(message.content)
+
     if str(message.content).startswith('<@378721481250570240>'):
         if not cleverbot:
             print("Values not given for Cleverbot Credentials")

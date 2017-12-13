@@ -15,6 +15,8 @@ d_id = config.default_server_role_id
 mod_ids = config.mod_role_ids
 CLEVERBOT_USER = config.cleverbot_user
 CLEVERBOT_KEY = config.cleverbot_key
+if CLEVERBOT_USER and CLEVERBOT_KEY:
+    cleverbot = clever.CleverBot(user=CLEVERBOT_USER, key=CLEVERBOT_KEY)
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
@@ -102,17 +104,23 @@ async def on_message(message):
         await bot.send_message(message.channel, 'is the best anime!')
 
     if str(message.content).startswith('<@378721481250570240>'):
+        if not cleverbot:
+            print("Values not given for Cleverbot Credentials")
+            return
+
         cn = message.channel
-        query = message.content.split(' ')[1: ]
+
+        await bot.send_typing(cn)
+
+        query = message.content.split(' ')[1:]
         query = ' '.join(query)
-        cleverbot = clever.CleverBot(user=CLEVERBOT_USER, key=CLEVERBOT_KEY)
         rsp = None
         try:
             rsp = cleverbot.query(query)
         except:
             pass
 
-        await bot.send_message(cn, rsp)
+        await bot.send_message(cn, '<@{}> '.format(message.author.id) + rsp)
 
     await bot.process_commands(message)
 

@@ -114,7 +114,7 @@ async def on_message(message):
         query = ' '.join(query)
         rsp = None
         try:
-            rsp = cleverbot.query(text=query)
+            rsp = cleverbot.query(query)
         except:
             pass
 

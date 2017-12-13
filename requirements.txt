@@ -5,4 +5,3 @@ chardet
 youtube_dl
 heroku3
 pokebase
-cleverbot==2.0.0

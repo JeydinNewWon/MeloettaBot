@@ -16,7 +16,6 @@ class CleverBot(object):
 
         requests.post('https://cleverbot.io/1.0/create', json=body)
 
-
     def query(self, text):
         body = {
             'user': self.user,

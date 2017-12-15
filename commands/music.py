@@ -28,6 +28,7 @@ ytdl_format_options = {
     "forcefilename": True
 }
 
+
 def get_ytdl(id):
     format = ytdl_format_options
     format["outtmpl"] = "data/music/{}/%(id)s.mp3".format(id)
@@ -74,21 +75,13 @@ class Queue:
         self.repeat = False
         self.voice_client = voice_client
         self.play_next_song = asyncio.Event()
+        self.song_list = []
         self.current = None
         self.skip_votes = set()
         self.songs = asyncio.Queue()
         self.song_list = []
+        self.was_repeating = False
         self.audio_player = self.bot.loop.create_task(self.audio_player_task())
-
-    def set_repeat(self):
-        if not self.repeat:
-            self.repeat = True
-            return True
-        elif self.repeat:
-            self.repeat = False
-            return False
-        else:
-            return
 
     def is_playing(self):
         if self.voice_client is None or self.current is None:
@@ -106,21 +99,44 @@ class Queue:
 
     def skip(self):
         self.skip_votes.clear()
-        if self.is_playing():
-            self.player.stop()
 
-    def get_songs(self):
-        return self.songs
+        if self.is_playing():
+            if self.repeat:
+                self._set_repeat()
+                self.was_repeating = True
+                self.player.stop()
+            else:
+                self.player.stop()
+
+    def _set_repeat(self):
+        if not self.repeat:
+            self.repeat = True
+            return True
+        elif self.repeat:
+            self.repeat = False
+            self.was_repeating = False
+            return False
+        else:
+            return
 
     async def audio_player_task(self):
         while True:
+            if self.repeat:
+                self.play_next_song.clear()
+                player = self.voice_client.create_ffmpeg_player(self.current.path, after=self.toggle_next)
+                self.current.player = player
+                await self.bot.send_message(self.current.channel, self.current.on_song_playing())
+                player.start()
+                await self.play_next_song.wait()
+                continue
+
             self.play_next_song.clear()
             self.current = await self.songs.get()
-            self.song_list.remove(self.current)
-            self.skip_votes.clear()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
             await self.play_next_song.wait()
+            if self.was_repeating:
+                self._set_repeat()
 
 
 class Music:
@@ -221,7 +237,6 @@ class Music:
             print(traceback.format_exc())
             return
         else:
-
             path = video_info['path']
             title = video_info['title']
             duration = video_info['duration']
@@ -355,7 +370,7 @@ class Music:
         voter = ctx.message.author
         author_role_names = [role.name.lower() for role in voter.roles]
         if voter == queue.current.requester or voter.id == owner_id or 'dj' in author_role_names:
-            queue.player.stop()
+            queue.skip()
             await self.bot.say(':track_next: Skipping **{}** ...'.format(queue.current.title))
         elif voter.id not in queue.skip_votes:
             queue.skip_votes.add(voter.id)
@@ -381,9 +396,9 @@ class Music:
             embed = queue.current.embed()
             await self.bot.say(embed=embed)
 
-    '''
     @commands.command(pass_context=True, no_pm=True)
     async def repeat(self, ctx):
+        # Sets the repeat state
         server = ctx.message.server
         queue = self.get_queue(server)
         author_voice = ctx.message.author.voice.voice_channel
@@ -396,17 +411,13 @@ class Music:
             await self.bot.say('{} Nothing is playing...'.format(fail))
             return
 
-        repeat_state = queue.set_repeat()
+        repeat_state = queue._set_repeat()
 
         if repeat_state:
             await self.bot.say('{} Repeat state set to True.'.format(':repeat:'))
         else:
             await self.bot.say('{} Repeat state set to False.'.format(':repeat:'))
 
-        print(queue.repeat)
-    '''
-
 
 def setup(bot):
     bot.add_cog(Music(bot))
-

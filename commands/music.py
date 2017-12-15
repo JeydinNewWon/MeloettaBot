@@ -131,6 +131,7 @@ class Queue:
                 continue
 
             self.play_next_song.clear()
+            del self.song_list[0]
             self.current = await self.songs.get()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
@@ -273,7 +274,8 @@ class Music:
             for i in song_list:
                 embed.add_field(
                     name="{}. {}".format(song_list.index(i) + 1, i.title),
-                    value="`{}`".format(str(i.duration))
+                    value="`{}`".format(str(i.duration)),
+                    inline=False
                 )
 
             await self.bot.say(embed=embed)

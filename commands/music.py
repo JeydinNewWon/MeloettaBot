@@ -129,7 +129,7 @@ class Queue:
                 continue
 
             self.current = await self.songs.get()
-            self.song_list.remove(self.current.title)
+            # self.song_list.remove(self.current.title)
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
             await self.play_next_song.wait()

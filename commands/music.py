@@ -271,7 +271,8 @@ class Music:
             for i in song_list:
                 embed.add_field(
                     name="{}. {}".format(song_list.index(i) + 1, i.title),
-                    value="`{}`".format(str(i.duration))
+                    value="`{}`".format(str(i.duration)),
+                    inline=False
                 )
 
             await self.bot.say(embed=embed)

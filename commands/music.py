@@ -74,7 +74,6 @@ class Queue:
         self.repeat = False
         self.voice_client = voice_client
         self.play_next_song = asyncio.Event()
-        self.song_list = []
         self.current = None
         self.skip_votes = set()
         self.songs = asyncio.Queue()
@@ -129,6 +128,7 @@ class Queue:
                 await self.play_next_song.wait()
                 continue
 
+            del self.song_list[0]
             self.current = await self.songs.get()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()

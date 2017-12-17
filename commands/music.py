@@ -74,7 +74,6 @@ class Queue:
         self.repeat = False
         self.voice_client = voice_client
         self.play_next_song = asyncio.Event()
-        self.song_list = []
         self.current = None
         self.skip_votes = set()
         self.songs = asyncio.Queue()
@@ -130,6 +129,7 @@ class Queue:
                 continue
 
             self.current = await self.songs.get()
+            self.song_list.remove(self.current)
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
             await self.play_next_song.wait()
@@ -271,7 +271,8 @@ class Music:
             for i in song_list:
                 embed.add_field(
                     name="{}. {}".format(song_list.index(i) + 1, i.title),
-                    value="`{}`".format(str(i.duration))
+                    value="`{}`".format(str(i.duration)),
+                    inline=False
                 )
 
             await self.bot.say(embed=embed)
@@ -420,4 +421,3 @@ class Music:
 
 def setup(bot):
     bot.add_cog(Music(bot))
-

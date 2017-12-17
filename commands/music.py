@@ -28,7 +28,6 @@ ytdl_format_options = {
     "forcefilename": True
 }
 
-
 def get_ytdl(id):
     format = ytdl_format_options
     format["outtmpl"] = "data/music/{}/%(id)s.mp3".format(id)
@@ -111,18 +110,18 @@ class Queue:
     def _set_repeat(self):
         if not self.repeat:
             self.repeat = True
+            self.was_repeating = False
             return True
         elif self.repeat:
             self.repeat = False
-            self.was_repeating = False
             return False
         else:
             return
 
     async def audio_player_task(self):
         while True:
+            self.play_next_song.clear()
             if self.repeat:
-                self.play_next_song.clear()
                 player = self.voice_client.create_ffmpeg_player(self.current.path, after=self.toggle_next)
                 self.current.player = player
                 await self.bot.send_message(self.current.channel, self.current.on_song_playing())
@@ -130,8 +129,6 @@ class Queue:
                 await self.play_next_song.wait()
                 continue
 
-            self.play_next_song.clear()
-            del self.song_list[0]
             self.current = await self.songs.get()
             await self.bot.send_message(self.current.channel, self.current.on_song_playing())
             self.current.player.start()
@@ -274,8 +271,7 @@ class Music:
             for i in song_list:
                 embed.add_field(
                     name="{}. {}".format(song_list.index(i) + 1, i.title),
-                    value="`{}`".format(str(i.duration)),
-                    inline=False
+                    value="`{}`".format(str(i.duration))
                 )
 
             await self.bot.say(embed=embed)
@@ -398,6 +394,7 @@ class Music:
             embed = queue.current.embed()
             await self.bot.say(embed=embed)
 
+
     @commands.command(pass_context=True, no_pm=True)
     async def repeat(self, ctx):
         # Sets the repeat state
@@ -423,3 +420,4 @@ class Music:
 
 def setup(bot):
     bot.add_cog(Music(bot))
+

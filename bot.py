@@ -40,7 +40,7 @@ async def _restart_bot(is_prod=is_prod):
         try:
             app.restart()
             aiosession.close()
-            await bot.get_cog("Music").disconnect()
+            await bot.cogs["Music"].disconnect_all_voice_clients()
             await bot.logout()
         except:
             pass
@@ -50,7 +50,7 @@ async def _restart_bot(is_prod=is_prod):
 
         try:
             aiosession.close()
-            await bot.get_cog("Music").disconnect()
+            await bot.cogs["Music"].disconnect_all_voice_clients()
             await bot.logout()
         except:
             pass

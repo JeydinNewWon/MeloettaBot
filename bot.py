@@ -55,7 +55,7 @@ async def _restart_bot(is_prod=is_prod):
         except:
             pass
 
-        subprocess.call(["python3.6", "bot.py"])
+        bot.run(config.token)
 
 
 async def _shutdown_bot():

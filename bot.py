@@ -20,7 +20,7 @@ if CLEVERBOT_USER and CLEVERBOT_KEY:
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
-extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.music', 'commands.pokedex']
+extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.pokedex']
 
 bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and functions.", pm_help=None)
 bot.remove_command('help')
@@ -121,6 +121,18 @@ async def on_message(message):
             pass
 
         await bot.send_message(cn, '<@{}> '.format(message.author.id) + rsp)
+
+    if message.server.id == '300603616689913867' and message.channel.id != '348011713465024514' and (not message.author.bot):
+        embed = discord.Embed()
+        embed.set_author(name=message.author.name, icon_url=message.author.default_avatar_url)
+        embed.add_field(name='Message Content:', value=message.content, inline=False)
+        await bot.send_message(discord.Object('408167487171985408'), embed=embed)
+
+    elif message.server.id == '300603616689913867' and (not message.author.bot):
+        embed = discord.Embed()
+        embed.set_author(name=message.author.name, icon_url=message.author.default_avatar_url)
+        embed.add_field(name='Message Content:', value=message.content, inline=False)
+        await bot.send_message(discord.Object('348011713465024514'), embed=embed)
 
     await bot.process_commands(message)
 

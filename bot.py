@@ -136,6 +136,7 @@ async def on_message(message):
         embed.add_field(name='Message Content:', value=message.content, inline=False)
         await bot.send_message(discord.Object('408167487171985408'), embed=embed)
 
+    '''
     elif message.server.id == '385379974951206913' and (not message.author.bot) and message.author.id != config.owner_id:
         embed = discord.Embed(
             colour=discord.Colour.green()
@@ -149,6 +150,7 @@ async def on_message(message):
         embed.set_author(name=message.author.name + '#' + str(message.author.discriminator), icon_url=icon_url)
         embed.add_field(name='Message Content:', value=message.content, inline=False)
         await bot.send_message(discord.Object('348011713465024514'), embed=embed)
+    '''
 
     await bot.process_commands(message)
 

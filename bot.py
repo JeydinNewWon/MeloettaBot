@@ -122,15 +122,31 @@ async def on_message(message):
 
         await bot.send_message(cn, '<@{}> '.format(message.author.id) + rsp)
 
-    if message.server.id == '300603616689913867' and message.channel.id != '348011713465024514' and (not message.author.bot):
-        embed = discord.Embed()
-        embed.set_author(name=message.author.name, icon_url=message.author.default_avatar_url)
+    if message.server.id == '300603616689913867' and message.channel.id != '348011713465024514' and (not message.author.bot) and message.author.id != config.owner_id:
+        embed = discord.Embed(
+            colour=discord.Colour.green()
+        )
+        icon_url = message.author.avatar_url
+
+        if icon_url is None:
+            icon_url = message.author.default_avatar_url
+
+
+        embed.set_author(name=message.author.name + '#' + str(message.author.discriminator), icon_url=icon_url)
         embed.add_field(name='Message Content:', value=message.content, inline=False)
         await bot.send_message(discord.Object('408167487171985408'), embed=embed)
 
-    elif message.server.id == '385379974951206913' and (not message.author.bot):
-        embed = discord.Embed()
-        embed.set_author(name=message.author.name, icon_url=message.author.default_avatar_url)
+    elif message.server.id == '385379974951206913' and (not message.author.bot) and message.author.id != config.owner_id:
+        embed = discord.Embed(
+            colour=discord.Colour.green()
+        )
+
+        icon_url = message.author.avatar_url
+
+        if icon_url is None:
+            icon_url = message.author.default_avatar_url
+
+        embed.set_author(name=message.author.name + '#' + str(message.author.discriminator), icon_url=icon_url)
         embed.add_field(name='Message Content:', value=message.content, inline=False)
         await bot.send_message(discord.Object('348011713465024514'), embed=embed)
 

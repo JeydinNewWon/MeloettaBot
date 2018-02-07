@@ -103,8 +103,8 @@ async def on_message(message):
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
 
-    elif 'mood' in message.content or 'inaaf' in message.content:
-        await bot.send_message(message.channel, f"@<{message.author.id}> Stooge alert!")
+    elif ('mood' in message.content or 'inaaf' in message.content) and message.server.id != '385379974951206913':
+        await bot.send_message(message.channel, f"<@{message.author.id}> Stooge alert!")
 
     if str(message.content).startswith('<@378721481250570240>') or str(message.content).startswith('<@!378721481250570240>'):
         if not cleverbot:

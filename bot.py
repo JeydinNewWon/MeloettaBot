@@ -20,7 +20,7 @@ if CLEVERBOT_USER and CLEVERBOT_KEY:
 HEROKU_KEY = config.heroku_api_key
 is_prod = os.environ.get('ON_HEROKU', None)
 opus_load_status = opus_loader.load_opus_lib()
-extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.pokedex']
+extensions = ['commands.miscellaneous', 'commands.moderation', 'commands.educational', 'commands.pokedex', 'commands.music']
 
 bot = commands.Bot(command_prefix=config.command_prefix, description="Meloetta Bot is a bot designed for moderation, music and functions.", pm_help=None)
 bot.remove_command('help')
@@ -102,6 +102,9 @@ async def on_ready():
 async def on_message(message):
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
+
+    elif 'mood' in message.content or 'inaaf' in message.content:
+        await bot.send_message(message.channel, f"@<{message.author.id}> Stooge alert!")
 
     if str(message.content).startswith('<@378721481250570240>') or str(message.content).startswith('<@!378721481250570240>'):
         if not cleverbot:

@@ -9,6 +9,7 @@ config = c.Config()
 class Misc(object):
     def __init__(self, bot):
         self.bot = bot
+        self.can_spam = True
 
     async def _spam(self, message, secret_spam=False):
 
@@ -34,10 +35,13 @@ class Misc(object):
                 print(x)
                 return
             else:
-                while x > 0:
+                while x > 0 and self.can_spam:
                     var = await self.bot.send_message(message.channel, msg_to_spam)
                     await self.bot.delete_message(var)
                     x -= 1
+
+                if not self.can_spam:
+                    self.set_spam(False)
         elif not secret_spam:
             content = message.content[7:]
             content = content.split(' ')
@@ -53,12 +57,19 @@ class Misc(object):
                 await self.bot.say('I can\'t spam things more than 100 times.')
                 return
             else:
-                while x > 0:
+                while x > 0 and self.can_spam:
                     asyncio.sleep(1)
                     await self.bot.say(msg_to_spam)
                     x -= 1
+
+                if not self.can_spam:
+                    self.set_spam(False)
+
         else:
             return
+
+    def set_spam(self, value):
+        self.can_spam = value
 
     @commands.command(pass_context=True)
     async def translate(self, ctx):
@@ -88,6 +99,13 @@ class Misc(object):
     async def secretspam(self, ctx):
         message = ctx.message
         await self._spam(message, secret_spam=True)
+
+    @commands.command(pass_context=True)
+    async def stopspam(self, ctx):
+        message = ctx.message
+        if message.author.id == config.owner_id:
+            self.set_spam(False)
+            await self.bot.say("Stopped spamming!")
 
     @commands.command(pass_context=True)
     async def g(self, ctx):

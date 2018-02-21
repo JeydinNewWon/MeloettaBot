@@ -41,7 +41,7 @@ class Misc(object):
                     x -= 1
 
                 if not self.can_spam:
-                    self.set_spam(False)
+                    self.set_spam(True)
         elif not secret_spam:
             content = message.content[7:]
             content = content.split(' ')
@@ -63,7 +63,7 @@ class Misc(object):
                     x -= 1
 
                 if not self.can_spam:
-                    self.set_spam(False)
+                    self.set_spam(True)
 
         else:
             return

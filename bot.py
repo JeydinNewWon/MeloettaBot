@@ -106,9 +106,10 @@ async def on_message(message):
     if message.content == 'rwby':
         await bot.send_message(message.channel, 'is the best anime!')
 
-    elif ('mood' in message.content or 'inaaf' in message.content) and message.server.id != '385379974951206913':
+    elif ((message.content == 'honestly') or ('mood' in message.content or 'inaaf' in message.content)) and message.server.id != '385379974951206913':
         await bot.send_message(message.channel, f"<@{message.author.id}> Stooge alert!")
 
+    '''
     if str(message.content).startswith('<@378721481250570240>') or str(message.content).startswith('<@!378721481250570240>'):
         if not cleverbot:
             print("Values not given for Cleverbot Credentials")
@@ -127,7 +128,7 @@ async def on_message(message):
             pass
 
         await bot.send_message(cn, '<@{}> '.format(message.author.id) + rsp)
-
+    '''
     '''
     if message.server.id == '300603616689913867' and message.channel.id != '348011713465024514' and (not message.author.bot) and message.author.id != config.owner_id:
         embed = discord.Embed(
